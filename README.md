@@ -5,14 +5,13 @@ Made for openFrameworks 0.7.3
 
 Description
 -----------
-Cosm (www.cosm.com) is an online interface/api to share live data across the globe. This addon implements a part of the API and allows reading (output) and serving (input) data from and to feeds. Readign can be done as CSV or EEML, serving can be done only as CSV.
+[Cosm](cosm.com) is an online interface/api to share live data across the globe. This addon implements a part of the API and allows reading (output) and serving (input) data from and to feeds. Readign can be done as CSV or EEML, serving can be done only as CSV.
 
 Dependencies
 ------------
-- ofxThread
 - Poco
 
 By
 --
-Leo Colombaro - 2013
+Leo Colombaro - 2013   
 Carl-Johan Rosén - 2009
