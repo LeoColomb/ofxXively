@@ -1,26 +1,26 @@
-/// This is an openFrameworks addon for talking to Cosm
-/// www.openframeworks.cc
-/// www.cosm.com
-///
-/// Works with of pre-release 0.06
-///
-/// Written by CJ
-/// www.carljohanrosen.com
-///
-///
-/// There is an issue with threading and broken internet connection which causes the
-/// app to crash if connection was broken when the application was started. Therefore
-/// the addon has the possibility to run non-threaded which causes the app to hang
-/// while waiting for www.cosm.com to respond. The choice is yours...
-///
-/// Dependencies:
-/// ofxThread
+/****************************
+* This is an openFrameworks addon for talking to Cosm
+* www.openframeworks.cc
+* www.cosm.com
+*
+* Works with of release 0.7.3
+*
+* Written by CJ
+* www.carljohanrosen.com
+*
+* Updated by Leo Colombaro - 2013
+*
+*
+* There is an issue with threading and broken internet connection which causes the
+* app to crash if connection was broken when the application was started. Therefore
+* the addon has the possibility to run non-threaded which causes the app to hang
+* while waiting for www.cosm.com to respond. The choice is yours...
+****************************/
 
 #ifndef OFX_COSM_FEED_H
 #define OFX_COSM_FEED_H
 
 #include "ofMain.h"
-#include "ofxThread.h"
 
 #define OFX_COSM_MIN_INTERVAL    5
 #define OFX_COSM_GET             0
@@ -125,7 +125,7 @@ struct ofxCosmResponse
 	int             format;                 /// CSV/EEML
 };
 
-class ofxCosmFeed: public ofxThread
+class ofxCosmFeed: public ofThread
 {
 public:
 	ofxCosmFeed(bool _bThreaded);

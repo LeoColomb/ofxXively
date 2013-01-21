@@ -12,7 +12,7 @@ public:
 	~ofxCosmInput();
 
 	bool					input(int _format = OFX_COSM_CSV, bool _force = false);
-                            /// supports only CSV input at the moment
+	/// supports only CSV input at the moment
 	void                    onResponse(ofxCosmResponse& response);
 
 	void					setDatastreamCount(int _datastrams);

@@ -26,7 +26,7 @@ public:
 private:
 
 	/// INFO ABOUT FEED ->
- 	std::string				sTitle;
+	std::string				sTitle;
 	std::string				sStatus;
 	std::string				sDescription;
 	std::string				sWebsite;
@@ -36,7 +36,7 @@ private:
 	ofxCosmLocation		location;
 	/// <- INFO
 
-    float                   fLastOutput;
+	float                   fLastOutput;
 };
 
 #endif
