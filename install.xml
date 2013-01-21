@@ -7,18 +7,18 @@
 
         <src>
             <folder name="addons/ofxVectorGraphics/src">
-                <file>../../../addons/ofxVectorGraphics/src/ofxCosm.h</file>
-                <file>../../../addons/ofxVectorGraphics/src/ofxCosmFeed.cpp</file>
-                <file>../../../addons/ofxVectorGraphics/src/ofxCosmFeed.h</file>
-                <file>../../../addons/ofxVectorGraphics/src/ofxCosmInput.cpp</file>
-                <file>../../../addons/ofxVectorGraphics/src/ofxCosmInput.h</file>
-                <file>../../../addons/ofxVectorGraphics/src/ofxCosmOutput.cpp</file>
-                <file>../../../addons/ofxVectorGraphics/src/ofxCosmOutput.h</file>
+                <file>../../../addons/ofxCosm/src/ofxCosm.h</file>
+                <file>../../../addons/ofxCosm/src/ofxCosmFeed.cpp</file>
+                <file>../../../addons/ofxCosm/src/ofxCosmFeed.h</file>
+                <file>../../../addons/ofxCosm/src/ofxCosmInput.cpp</file>
+                <file>../../../addons/ofxCosm/src/ofxCosmInput.h</file>
+                <file>../../../addons/ofxCosm/src/ofxCosmOutput.cpp</file>
+                <file>../../../addons/ofxCosm/src/ofxCosmOutput.h</file>
             </folder>
         </src>
 
         <include>
-            <path>../../../addons/ofxVectorGraphics/src</path>
+            <path>../../../addons/ofxCosm/src</path>
         </include>
 
     </add>
