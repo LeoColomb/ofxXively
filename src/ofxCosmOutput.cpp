@@ -13,13 +13,12 @@
 
 #include <fstream>
 
-
 ofxCosmOutput::ofxCosmOutput(bool _bThreaded)
-: ofxCosmFeed(_bThreaded)
+	: ofxCosmFeed(_bThreaded)
 {
 	ofAddListener(responseEvent, this, &ofxCosmOutput::onResponse);
 
-    fLastOutput = ofGetElapsedTimef();
+	fLastOutput = ofGetElapsedTimef();
 }
 
 ofxCosmOutput::~ofxCosmOutput()
@@ -27,59 +26,59 @@ ofxCosmOutput::~ofxCosmOutput()
 }
 
 bool
-ofxCosmOutput::output(int _format, bool _force)
+	ofxCosmOutput::output(int _format, bool _force)
 {
-    if (ofGetElapsedTimef() - fLastOutput < fMinInterval && !_force)
-        return false;
+	if (ofGetElapsedTimef() - fLastOutput < fMinInterval && !_force)
+		return false;
 
-    if (bThreaded && bRequestQueued)
-        return false;
+	if (bThreaded && bRequestQueued)
+		return false;
 
-    if (sApiKey == "" || iFeedId == -1)
-    {
-        bLastRequestOk = false;
-        return false;
-    }
+	if (sApiKey == "" || iFeedId == -1)
+	{
+		bLastRequestOk = false;
+		return false;
+	}
 
-    if (_format == OFX_COSM_CSV)
-    {
-        request.method = OFX_COSM_GET;
-        request.format = OFX_COSM_CSV;
-        request.clearHeaders();
-        request.addHeader("X-CosmApiKey", sApiKey);
-        char pcUrl[256];
-        sprintf(pcUrl, "%s%d.csv", sApiUrl.c_str(), iFeedId);
-        request.url = pcUrl;
-        request.timeout = 5;
-    }
-    else if (_format == OFX_COSM_EEML)
-    {
-        request.method = OFX_COSM_GET;
-        request.format = OFX_COSM_EEML;
-        request.clearHeaders();
-        request.addHeader("X-CosmApiKey", sApiKey);
-        char pcUrl[256];
-        sprintf(pcUrl, "%s%d.xml", sApiUrl.c_str(), iFeedId);
-        request.url = pcUrl;
-        request.timeout = 5;
-    }
-    else
-    {
-        /// unrecognized format
-        return false;
-    }
+	if (_format == OFX_COSM_CSV)
+	{
+		request.method = OFX_COSM_GET;
+		request.format = OFX_COSM_CSV;
+		request.clearHeaders();
+		request.addHeader("X-CosmApiKey", sApiKey);
+		char pcUrl[256];
+		sprintf(pcUrl, "%s%d.csv", sApiUrl.c_str(), iFeedId);
+		request.url = pcUrl;
+		request.timeout = 5;
+	}
+	else if (_format == OFX_COSM_EEML)
+	{
+		request.method = OFX_COSM_GET;
+		request.format = OFX_COSM_EEML;
+		request.clearHeaders();
+		request.addHeader("X-CosmApiKey", sApiKey);
+		char pcUrl[256];
+		sprintf(pcUrl, "%s%d.xml", sApiUrl.c_str(), iFeedId);
+		request.url = pcUrl;
+		request.timeout = 5;
+	}
+	else
+	{
+		/// unrecognized format
+		return false;
+	}
 
-    fLastOutput = ofGetElapsedTimef();
+	fLastOutput = ofGetElapsedTimef();
 
-    if (bThreaded)
-        bRequestQueued = true;
-    else
-        sendRequest(request);
-    return true;
+	if (bThreaded)
+		bRequestQueued = true;
+	else
+		sendRequest(request);
+	return true;
 }
 
 bool
-ofxCosmOutput::parseResponseCsv(string _response)
+	ofxCosmOutput::parseResponseCsv(string _response)
 {
 	bool bEOL = false;
 	int i = 0;
@@ -109,9 +108,9 @@ ofxCosmOutput::parseResponseCsv(string _response)
 }
 
 bool
-ofxCosmOutput::parseResponseEeml(string _response)
+	ofxCosmOutput::parseResponseEeml(string _response)
 {
-    if (bVerbose) printf("[COSM] start parsing eeml\n");
+	if (bVerbose) printf("[COSM] start parsing eeml\n");
 	try
 	{
 		pData.clear();
@@ -124,11 +123,11 @@ ofxCosmOutput::parseResponseEeml(string _response)
 		Poco::XML::Node* pNode = itElem.nextNode();
 		while (pNode)
 		{
-		    if (pNode->nodeName() == Poco::XML::XMLString("environment"))
-		    {
-                pMap = (Poco::XML::AttrMap*)pNode->attributes();
+			if (pNode->nodeName() == Poco::XML::XMLString("environment"))
+			{
+				pMap = (Poco::XML::AttrMap*)pNode->attributes();
 				sUpdated = pMap->getNamedItem("updated")->nodeValue();
-		    }
+			}
 
 			if (pNode->nodeName() == Poco::XML::XMLString("title"))
 				sTitle = pNode->firstChild()->getNodeValue();
@@ -141,12 +140,12 @@ ofxCosmOutput::parseResponseEeml(string _response)
 
 			if (pNode->nodeName() == Poco::XML::XMLString("location"))
 			{
-//				pMap = (Poco::XML::AttrMap*)pNode->attributes();
-//				location.sDomain = pMap->getNamedItem("domain")->nodeValue();
-//				location.sExposure = pMap->getNamedItem("exposure")->nodeValue();
-//				location.sDisposition = pMap->getNamedItem("disposition")->nodeValue();
+				//				pMap = (Poco::XML::AttrMap*)pNode->attributes();
+				//				location.sDomain = pMap->getNamedItem("domain")->nodeValue();
+				//				location.sExposure = pMap->getNamedItem("exposure")->nodeValue();
+				//				location.sDisposition = pMap->getNamedItem("disposition")->nodeValue();
 
-             	Poco::XML::NodeIterator itChildren(pNode, Poco::XML::NodeFilter::SHOW_ELEMENT);
+				Poco::XML::NodeIterator itChildren(pNode, Poco::XML::NodeFilter::SHOW_ELEMENT);
 				Poco::XML::Node* pChild = itChildren.nextNode();
 				while (pChild)
 				{
@@ -159,9 +158,7 @@ ofxCosmOutput::parseResponseEeml(string _response)
 
 					pChild = itChildren.nextNode();
 				}
-
 			}
-
 
 			if (pNode->nodeName() == Poco::XML::XMLString("data"))
 			{
@@ -182,8 +179,8 @@ ofxCosmOutput::parseResponseEeml(string _response)
 						data.fValue = atof(pChild->firstChild()->getNodeValue().c_str());
 
 						pMap = (Poco::XML::AttrMap*)pChild->attributes();
-                        data.fValueMin = atof(pMap->getNamedItem("minValue")->nodeValue().c_str());
-                        data.fValueMax = atof(pMap->getNamedItem("maxValue")->nodeValue().c_str());
+						data.fValueMin = atof(pMap->getNamedItem("minValue")->nodeValue().c_str());
+						data.fValueMax = atof(pMap->getNamedItem("maxValue")->nodeValue().c_str());
 					}
 
 					pChild = itChildren.nextNode();
@@ -206,37 +203,37 @@ ofxCosmOutput::parseResponseEeml(string _response)
 }
 
 void
-ofxCosmOutput::onResponse(ofxCosmResponse &response)
+	ofxCosmOutput::onResponse(ofxCosmResponse &response)
 {
-    if (bVerbose)
-    {
-        printf("[COSM] received response with status %d\n", response.status);
-        printf("[COSM] %s\n", response.reasonForStatus.c_str());
-        printf("[COSM] %s\n", response.responseBody.c_str());
-    }
+	if (bVerbose)
+	{
+		printf("[COSM] received response with status %d\n", response.status);
+		printf("[COSM] %s\n", response.reasonForStatus.c_str());
+		printf("[COSM] %s\n", response.responseBody.c_str());
+	}
 
-    if (response.status == 200)
-    {
-        bool bParsedOk;
-        if (response.format == OFX_COSM_CSV)
-            bParsedOk = parseResponseCsv(response.responseBody);
-        else if (response.format == OFX_COSM_EEML)
-            bParsedOk = parseResponseEeml(response.responseBody);
+	if (response.status == 200)
+	{
+		bool bParsedOk;
+		if (response.format == OFX_COSM_CSV)
+			bParsedOk = parseResponseCsv(response.responseBody);
+		else if (response.format == OFX_COSM_EEML)
+			bParsedOk = parseResponseEeml(response.responseBody);
 
-        if (bParsedOk)
-        {
-            bLastRequestOk = true;
-            fLastResponseTime = ofGetElapsedTimef();
-        }
-        else
-        {
-            bLastRequestOk = false;
-        }
-    }
-    else
-    {
-        bLastRequestOk = false;
-        printf("[COSM] Error: response failed with status %d\n", response.status);
-        printf("[COSM] %s\n", response.responseBody.c_str());
-    }
+		if (bParsedOk)
+		{
+			bLastRequestOk = true;
+			fLastResponseTime = ofGetElapsedTimef();
+		}
+		else
+		{
+			bLastRequestOk = false;
+		}
+	}
+	else
+	{
+		bLastRequestOk = false;
+		printf("[COSM] Error: response failed with status %d\n", response.status);
+		printf("[COSM] %s\n", response.responseBody.c_str());
+	}
 }

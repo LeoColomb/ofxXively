@@ -28,7 +28,6 @@
 #define OFX_COSM_CSV             0
 #define OFX_COSM_EEML            1
 
-
 #include "Poco/Net/HTTPClientSession.h"
 #include "Poco/Net/HTTPRequest.h"
 #include "Poco/Net/HTTPResponse.h"
@@ -71,12 +70,12 @@ struct ofxCosmData
 
 struct ofxCosmRequest
 {
-    ofxCosmRequest()
-    {
-    }
-    ~ofxCosmRequest(){
-        clearHeaders();
-    }
+	ofxCosmRequest()
+	{
+	}
+	~ofxCosmRequest(){
+		clearHeaders();
+	}
 
 	int             method;             /// GET or PUT
 	int             format;             /// CSV or EEML
@@ -88,33 +87,33 @@ struct ofxCosmRequest
 
 	string          data;
 
-    // ----------------------------------------------------------------------
+	// ----------------------------------------------------------------------
 	void addHeader(string id, string value){
-        headerIds.push_back( id );
-        headerValues.push_back( value );
+		headerIds.push_back( id );
+		headerValues.push_back( value );
 	}
 	// ----------------------------------------------------------------------
 	void clearHeaders(){
-	    headerIds.clear();
-        headerValues.clear();
+		headerIds.clear();
+		headerValues.clear();
 	}
 };
 
 struct ofxCosmResponse
 {
-    ofxCosmResponse(HTTPResponse& pocoResponse, std::istream &bodyStream, string _url, int _format)
-    {
-        status=pocoResponse.getStatus();
+	ofxCosmResponse(HTTPResponse& pocoResponse, std::istream &bodyStream, string _url, int _format)
+	{
+		status=pocoResponse.getStatus();
 		timestamp=pocoResponse.getDate();
 		reasonForStatus=pocoResponse.getReasonForStatus(pocoResponse.getStatus());
 		contentType = pocoResponse.getContentType();
 
 		StreamCopier::copyToString(bodyStream, responseBody);
-        url = _url;
-        format = _format;
-    }
-    ~ofxCosmResponse()
-    {}
+		url = _url;
+		format = _format;
+	}
+	~ofxCosmResponse()
+	{}
 
 	int             status; 				/// return code for the response ie: 200 = OK
 	string          reasonForStatus;		/// text explaining the status
@@ -135,33 +134,32 @@ public:
 	void					setApiKey(std::string _sApiKey);
 	void					setFeedId(int _iId);
 	int						getFeedId()
-                            {return iFeedId;}
+	{return iFeedId;}
 	void					setVerbose(bool _bVerbose)
-                            {bVerbose = _bVerbose;}
+	{bVerbose = _bVerbose;}
 
-    bool                    getLastRequestOk()
-                            {return bLastRequestOk;}
-    float                   getLastResponseTime()
-                            {return fLastResponseTime;}
+	bool                    getLastRequestOk()
+	{return bLastRequestOk;}
+	float                   getLastResponseTime()
+	{return fLastResponseTime;}
 
 	int						getDatastreamCount() {return pData.size();}
 	float					getValue(int _datastream);
 	ofxCosmData*			getDataStruct(int _datastream);
 
 protected:
-    bool                    bThreaded;
+	bool                    bThreaded;
 
 	bool                    bRequestQueued;
 	ofxCosmRequest       request;
 	void                    threadedFunction();
-    void                    sendRequest(ofxCosmRequest request);
+	void                    sendRequest(ofxCosmRequest request);
 
-    ofEvent<ofxCosmResponse> responseEvent;
-    virtual void            onResponse(ofxCosmResponse& response) =0;
-                            /// dummy function, just to make ofxCosmFeed impossible to instantiate
-    bool                    bLastRequestOk;
-    float                   fLastResponseTime;
-
+	ofEvent<ofxCosmResponse> responseEvent;
+	virtual void            onResponse(ofxCosmResponse& response) =0;
+	/// dummy function, just to make ofxCosmFeed impossible to instantiate
+	bool                    bLastRequestOk;
+	float                   fLastResponseTime;
 
 	bool					bApiKeyOk;
 	std::string				sApiKey;
