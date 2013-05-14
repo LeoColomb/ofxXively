@@ -2,7 +2,7 @@
 #define _TEST_APP
 
 #include "ofMain.h"
-#include "ofxCosm.h"
+#include "ofxXively.h"
 
 //--------------------------------------------------------
 class testApp : public ofSimpleApp
@@ -22,8 +22,8 @@ class testApp : public ofSimpleApp
 		void mouseReleased();
 
 	private:
-		ofxCosmOutput*               out;
-		ofxCosmInput*                in;
+		ofxXivelyOutput*               out;
+		ofxXivelyInput*                in;
 
         int                             iCounter;
 };

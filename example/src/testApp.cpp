@@ -4,15 +4,15 @@ testApp::testApp()
 {
     iCounter = 0;
 
-    out = new ofxCosmOutput(true);       /// threaded
+    out = new ofxXivelyOutput(true);       /// threaded
  	out->setApiKey("6f438ce7b9318cad96259a5b6cff964150ce248706bfcddf9850f742922fed8f");
- 	/// To read a feed you need a cosm api key. More info at www.cosm.com
+ 	/// To read a feed you need a xively api key. More info at xively.com
 	out->setFeedId(1543);
 	out->setVerbose(false);
 	out->setMinInterval(5);
-	out->output(OFX_COSM_EEML, true);    /// forcing update = ignoring min interval
+	out->output(OFX_XIVELY_EEML, true);    /// forcing update = ignoring min interval
 
-    in = new ofxCosmInput(false);        /// not threaded
+    in = new ofxXivelyInput(false);        /// not threaded
 	in->setApiKey("1c7c8101fdaf393b0cb0f326c097eeebb63329d1f912d164bd49d256627657ba");
 	/// To update a feed you need to have created it (I think?) otherwise you'll get an 'Unautharized' error
 	in->setFeedId(143);
@@ -35,12 +35,12 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
 
-    /// Values are updated from Cosm if min interval has passed since last update
+    /// Values are updated from Xively if min interval has passed since last update
     /// Override this by setting the 'force' argument to true
     /// Feeds can be read as EEML or CSV
-    out->output(OFX_COSM_CSV, false);
+    out->output(OFX_XIVELY_CSV, false);
 
-    /// value is set each 'update' but input to cosm is done only after min interval has passed
+    /// value is set each 'update' but input to xively is done only after min interval has passed
     /// You can control this maually by some timing functionality, or adjusting in->setMinInterval()
     /// Input can only be done as CSV
     in->setValue(0, ofRandom(0,100));
@@ -115,7 +115,7 @@ void testApp::keyPressed  (int key){
 
     /// Press 'e' to refresh feed info compleately as EEML
     if (key == 'e')
-        out->output(OFX_COSM_EEML, true);
+        out->output(OFX_XIVELY_EEML, true);
 }
 
 //--------------------------------------------------------------

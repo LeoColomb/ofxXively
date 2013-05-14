@@ -1,4 +1,4 @@
-#include "ofxCosmOutput.h"
+#include "ofxXivelyOutput.h"
 
 #include "Poco/DOM/DOMParser.h"
 #include "Poco/DOM/Document.h"
@@ -13,20 +13,20 @@
 
 #include <fstream>
 
-ofxCosmOutput::ofxCosmOutput(bool _bThreaded)
-	: ofxCosmFeed(_bThreaded)
+ofxXivelyOutput::ofxXivelyOutput(bool _bThreaded)
+	: ofxXivelyFeed(_bThreaded)
 {
-	ofAddListener(responseEvent, this, &ofxCosmOutput::onResponse);
+	ofAddListener(responseEvent, this, &ofxXivelyOutput::onResponse);
 
 	fLastOutput = ofGetElapsedTimef();
 }
 
-ofxCosmOutput::~ofxCosmOutput()
+ofxXivelyOutput::~ofxXivelyOutput()
 {
 }
 
 bool
-	ofxCosmOutput::output(int _format, bool _force)
+	ofxXivelyOutput::output(int _format, bool _force)
 {
 	if (ofGetElapsedTimef() - fLastOutput < fMinInterval && !_force)
 		return false;
@@ -40,23 +40,23 @@ bool
 		return false;
 	}
 
-	if (_format == OFX_COSM_CSV)
+	if (_format == OFX_XIVELY_CSV)
 	{
-		request.method = OFX_COSM_GET;
-		request.format = OFX_COSM_CSV;
+		request.method = OFX_XIVELY_GET;
+		request.format = OFX_XIVELY_CSV;
 		request.clearHeaders();
-		request.addHeader("X-CosmApiKey", sApiKey);
+		request.addHeader("X-XivelyApiKey", sApiKey);
 		char pcUrl[256];
 		sprintf(pcUrl, "%s%d.csv", sApiUrl.c_str(), iFeedId);
 		request.url = pcUrl;
 		request.timeout = 5;
 	}
-	else if (_format == OFX_COSM_EEML)
+	else if (_format == OFX_XIVELY_EEML)
 	{
-		request.method = OFX_COSM_GET;
-		request.format = OFX_COSM_EEML;
+		request.method = OFX_XIVELY_GET;
+		request.format = OFX_XIVELY_EEML;
 		request.clearHeaders();
-		request.addHeader("X-CosmApiKey", sApiKey);
+		request.addHeader("X-XivelyApiKey", sApiKey);
 		char pcUrl[256];
 		sprintf(pcUrl, "%s%d.xml", sApiUrl.c_str(), iFeedId);
 		request.url = pcUrl;
@@ -78,7 +78,7 @@ bool
 }
 
 bool
-	ofxCosmOutput::parseResponseCsv(string _response)
+	ofxXivelyOutput::parseResponseCsv(string _response)
 {
 	bool bEOL = false;
 	int i = 0;
@@ -89,12 +89,12 @@ bool
 
 		if (pData.size() <= i)
 		{
-			ofxCosmData d;
+			ofxXivelyData d;
 			d.iId = i;
 			pData.push_back(d);
 		}
 
-		ofxCosmData& data = pData.at(i);
+		ofxXivelyData& data = pData.at(i);
 		std::string sValue = _response.substr(0, iPos);
 		while (sValue.at(0) == ' ')
 			sValue = sValue.substr(1);
@@ -108,9 +108,9 @@ bool
 }
 
 bool
-	ofxCosmOutput::parseResponseEeml(string _response)
+	ofxXivelyOutput::parseResponseEeml(string _response)
 {
-	if (bVerbose) printf("[COSM] start parsing eeml\n");
+	if (bVerbose) printf("[XIVELY] start parsing eeml\n");
 	try
 	{
 		pData.clear();
@@ -162,7 +162,7 @@ bool
 
 			if (pNode->nodeName() == Poco::XML::XMLString("data"))
 			{
-				ofxCosmData data;
+				ofxXivelyData data;
 
 				pMap = (Poco::XML::AttrMap*)pNode->attributes();
 				data.iId = atoi(pMap->getNamedItem("id")->nodeValue().c_str());
@@ -194,30 +194,30 @@ bool
 	}
 	catch (Poco::Exception& exc)
 	{
-		printf("[COSM] Parse xml exception: %s\n", exc.displayText().c_str());
+		printf("[XIVELY] Parse xml exception: %s\n", exc.displayText().c_str());
 		return false;
 	}
-	if (bVerbose) printf("[COSM] finished parsing eeml\n");
+	if (bVerbose) printf("[XIVELY] finished parsing eeml\n");
 
 	return true;
 }
 
 void
-	ofxCosmOutput::onResponse(ofxCosmResponse &response)
+	ofxXivelyOutput::onResponse(ofxXivelyResponse &response)
 {
 	if (bVerbose)
 	{
-		printf("[COSM] received response with status %d\n", response.status);
-		printf("[COSM] %s\n", response.reasonForStatus.c_str());
-		printf("[COSM] %s\n", response.responseBody.c_str());
+		printf("[XIVELY] received response with status %d\n", response.status);
+		printf("[XIVELY] %s\n", response.reasonForStatus.c_str());
+		printf("[XIVELY] %s\n", response.responseBody.c_str());
 	}
 
 	if (response.status == 200)
 	{
 		bool bParsedOk;
-		if (response.format == OFX_COSM_CSV)
+		if (response.format == OFX_XIVELY_CSV)
 			bParsedOk = parseResponseCsv(response.responseBody);
-		else if (response.format == OFX_COSM_EEML)
+		else if (response.format == OFX_XIVELY_EEML)
 			bParsedOk = parseResponseEeml(response.responseBody);
 
 		if (bParsedOk)
@@ -233,7 +233,7 @@ void
 	else
 	{
 		bLastRequestOk = false;
-		printf("[COSM] Error: response failed with status %d\n", response.status);
-		printf("[COSM] %s\n", response.responseBody.c_str());
+		printf("[XIVELY] Error: response failed with status %d\n", response.status);
+		printf("[XIVELY] %s\n", response.responseBody.c_str());
 	}
 }

@@ -1,7 +1,7 @@
 /****************************
-* This is an openFrameworks addon for talking to Cosm
+* This is an openFrameworks addon for talking to Xively
 * www.openframeworks.cc
-* www.cosm.com
+* xively.com
 *
 * Works with of release 0.7.3
 *
@@ -14,19 +14,19 @@
 * There is an issue with threading and broken internet connection which causes the
 * app to crash if connection was broken when the application was started. Therefore
 * the addon has the possibility to run non-threaded which causes the app to hang
-* while waiting for www.cosm.com to respond. The choice is yours...
+* while waiting for xively.com to respond. The choice is yours...
 ****************************/
 
-#ifndef OFX_COSM_FEED_H
-#define OFX_COSM_FEED_H
+#ifndef OFX_XIVELY_FEED_H
+#define OFX_XIVELY_FEED_H
 
 #include "ofMain.h"
 
-#define OFX_COSM_MIN_INTERVAL    5
-#define OFX_COSM_GET             0
-#define OFX_COSM_PUT             1
-#define OFX_COSM_CSV             0
-#define OFX_COSM_EEML            1
+#define OFX_XIVELY_MIN_INTERVAL    5
+#define OFX_XIVELY_GET             0
+#define OFX_XIVELY_PUT             1
+#define OFX_XIVELY_CSV             0
+#define OFX_XIVELY_EEML            1
 
 #include "Poco/Net/HTTPClientSession.h"
 #include "Poco/Net/HTTPRequest.h"
@@ -48,7 +48,7 @@ using Poco::URI;
 using Poco::Exception;
 using Poco::Timespan;
 
-struct ofxCosmLocation
+struct ofxXivelyLocation
 {
 	std::string				sDomain;
 	std::string				sExposure;
@@ -59,7 +59,7 @@ struct ofxCosmLocation
 	std::string				sLon;
 };
 
-struct ofxCosmData
+struct ofxXivelyData
 {
 	int						iId;
 	std::vector<std::string> pTags;
@@ -68,12 +68,12 @@ struct ofxCosmData
 	float					fValueMax;
 };
 
-struct ofxCosmRequest
+struct ofxXivelyRequest
 {
-	ofxCosmRequest()
+	ofxXivelyRequest()
 	{
 	}
-	~ofxCosmRequest(){
+	~ofxXivelyRequest(){
 		clearHeaders();
 	}
 
@@ -99,9 +99,9 @@ struct ofxCosmRequest
 	}
 };
 
-struct ofxCosmResponse
+struct ofxXivelyResponse
 {
-	ofxCosmResponse(HTTPResponse& pocoResponse, std::istream &bodyStream, string _url, int _format)
+	ofxXivelyResponse(HTTPResponse& pocoResponse, std::istream &bodyStream, string _url, int _format)
 	{
 		status=pocoResponse.getStatus();
 		timestamp=pocoResponse.getDate();
@@ -112,7 +112,7 @@ struct ofxCosmResponse
 		url = _url;
 		format = _format;
 	}
-	~ofxCosmResponse()
+	~ofxXivelyResponse()
 	{}
 
 	int             status; 				/// return code for the response ie: 200 = OK
@@ -124,11 +124,11 @@ struct ofxCosmResponse
 	int             format;                 /// CSV/EEML
 };
 
-class ofxCosmFeed: public ofThread
+class ofxXivelyFeed: public ofThread
 {
 public:
-	ofxCosmFeed(bool _bThreaded);
-	virtual ~ofxCosmFeed();
+	ofxXivelyFeed(bool _bThreaded);
+	virtual ~ofxXivelyFeed();
 
 	void					setMinInterval(float fSeconds);
 	void					setApiKey(std::string _sApiKey);
@@ -145,19 +145,19 @@ public:
 
 	int						getDatastreamCount() {return pData.size();}
 	float					getValue(int _datastream);
-	ofxCosmData*			getDataStruct(int _datastream);
+	ofxXivelyData*			getDataStruct(int _datastream);
 
 protected:
 	bool                    bThreaded;
 
 	bool                    bRequestQueued;
-	ofxCosmRequest       request;
+	ofxXivelyRequest       request;
 	void                    threadedFunction();
-	void                    sendRequest(ofxCosmRequest request);
+	void                    sendRequest(ofxXivelyRequest request);
 
-	ofEvent<ofxCosmResponse> responseEvent;
-	virtual void            onResponse(ofxCosmResponse& response) =0;
-	/// dummy function, just to make ofxCosmFeed impossible to instantiate
+	ofEvent<ofxXivelyResponse> responseEvent;
+	virtual void            onResponse(ofxXivelyResponse& response) =0;
+	/// dummy function, just to make ofxXivelyFeed impossible to instantiate
 	bool                    bLastRequestOk;
 	float                   fLastResponseTime;
 
@@ -170,8 +170,8 @@ protected:
 
 	/// FEED DATA ->
 	std::vector<std::string>::iterator itTags;
-	std::vector<ofxCosmData>::iterator itData;
-	std::vector<ofxCosmData> pData;
+	std::vector<ofxXivelyData>::iterator itData;
+	std::vector<ofxXivelyData> pData;
 	/// <- FEED DATA
 
 	float					fMinInterval;

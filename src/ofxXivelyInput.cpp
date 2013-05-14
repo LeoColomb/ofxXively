@@ -1,22 +1,22 @@
-#include "ofxCosmInput.h"
+#include "ofxXivelyInput.h"
 
 #include "Poco/Exception.h"
 
 #include <fstream>
 
-ofxCosmInput::ofxCosmInput(bool _bThreaded)
-	: ofxCosmFeed(_bThreaded)
+ofxXivelyInput::ofxXivelyInput(bool _bThreaded)
+	: ofxXivelyFeed(_bThreaded)
 {
-	ofAddListener(responseEvent, this, &ofxCosmInput::onResponse);
+	ofAddListener(responseEvent, this, &ofxXivelyInput::onResponse);
 	fLastInput = ofGetElapsedTimef();
 }
 
-ofxCosmInput::~ofxCosmInput()
+ofxXivelyInput::~ofxXivelyInput()
 {
 }
 
 std::string
-	ofxCosmInput::makeCsv()
+	ofxXivelyInput::makeCsv()
 {
 	char pcCsv[1024];
 	pcCsv[0] = '\0';
@@ -36,7 +36,7 @@ std::string
 }
 
 bool
-	ofxCosmInput::input(int _format, bool _force)
+	ofxXivelyInput::input(int _format, bool _force)
 {
 	if (ofGetElapsedTimef() - fLastInput < fMinInterval && !_force)
 		return false;
@@ -50,12 +50,12 @@ bool
 		return false;
 	}
 
-	if (_format == OFX_COSM_CSV)
+	if (_format == OFX_XIVELY_CSV)
 	{
-		request.method = OFX_COSM_PUT;
-		request.format = OFX_COSM_CSV;
+		request.method = OFX_XIVELY_PUT;
+		request.format = OFX_XIVELY_CSV;
 		request.clearHeaders();
-		request.addHeader("X-CosmApiKey", sApiKey);
+		request.addHeader("X-XivelyApiKey", sApiKey);
 		char pcUrl[256];
 		sprintf(pcUrl, "%s%d.csv", sApiUrl.c_str(), iFeedId);
 		request.url = pcUrl;
@@ -78,13 +78,13 @@ bool
 }
 
 void
-	ofxCosmInput::onResponse(ofxCosmResponse &response)
+	ofxXivelyInput::onResponse(ofxXivelyResponse &response)
 {
 	if (bVerbose)
 	{
-		printf("[COSM] received response with status %d\n", response.status);
-		printf("[COSM] %s\n", response.reasonForStatus.c_str());
-		printf("[COSM] %s\n", response.responseBody.c_str());
+		printf("[XIVELY] received response with status %d\n", response.status);
+		printf("[XIVELY] %s\n", response.reasonForStatus.c_str());
+		printf("[XIVELY] %s\n", response.responseBody.c_str());
 	}
 
 	if (response.status == 200)
@@ -92,25 +92,25 @@ void
 		/// input OK
 		bLastRequestOk = true;
 		fLastResponseTime = ofGetElapsedTimef();
-		if (bVerbose) printf("[COSM] Input succeded\n");
+		if (bVerbose) printf("[XIVELY] Input succeded\n");
 	}
 	else
 	{
 		bLastRequestOk = false;
-		printf("[COSM] Error: response failed with status %d\n", response.status);
-		printf("[COSM] %s\n", response.responseBody.c_str());
+		printf("[XIVELY] Error: response failed with status %d\n", response.status);
+		printf("[XIVELY] %s\n", response.responseBody.c_str());
 	}
 }
 
 void
-	ofxCosmInput::setDatastreamCount(int _datastreams)
+	ofxXivelyInput::setDatastreamCount(int _datastreams)
 {
 	while (pData.size() > _datastreams)
 		pData.pop_back();
 
 	while (pData.size() < _datastreams)
 	{
-		ofxCosmData data;
+		ofxXivelyData data;
 		data.iId = pData.size();
 		data.fValue = 0.f;
 		data.fValueMin = 0.f;
@@ -121,7 +121,7 @@ void
 }
 
 bool
-	ofxCosmInput::setValue(int _datastream, float _value)
+	ofxXivelyInput::setValue(int _datastream, float _value)
 {
 	if (_datastream >= pData.size())
 		return false;

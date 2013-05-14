@@ -1,4 +1,4 @@
-#include "ofxCosmFeed.h"
+#include "ofxXivelyFeed.h"
 
 #include "Poco/Net/HTTPStreamFactory.h"
 #include "Poco/URI.h"
@@ -10,16 +10,16 @@
 
 #include <fstream>
 
-ofxCosmFeed::ofxCosmFeed(bool _bThreaded)
+ofxXivelyFeed::ofxXivelyFeed(bool _bThreaded)
 {
 	bThreaded = _bThreaded;
 	bVerbose = true;
 
-	sApiUrl = "http://www.cosm.com/api/";
+	sApiUrl = "https://api.xively.com/";
 	sApiKey = "";
 	iFeedId = -1;
 
-	fMinInterval = OFX_COSM_MIN_INTERVAL;
+	fMinInterval = OFX_XIVELY_MIN_INTERVAL;
 	bRequestQueued = false;
 	bLastRequestOk = true;
 	fLastResponseTime = -1.f;
@@ -28,41 +28,41 @@ ofxCosmFeed::ofxCosmFeed(bool _bThreaded)
 		startThread();
 }
 
-ofxCosmFeed::~ofxCosmFeed()
+ofxXivelyFeed::~ofxXivelyFeed()
 {
 	if (bThreaded)
 		stopThread();
 }
 
 void
-	ofxCosmFeed::setMinInterval(float fSeconds)
+	ofxXivelyFeed::setMinInterval(float fSeconds)
 {
-	if (fSeconds > OFX_COSM_MIN_INTERVAL)
+	if (fSeconds > OFX_XIVELY_MIN_INTERVAL)
 		fMinInterval = fSeconds;
 }
 
 void
-	ofxCosmFeed::setApiKey(std::string _sApiKey)
+	ofxXivelyFeed::setApiKey(std::string _sApiKey)
 {
 	sApiKey = _sApiKey;
 }
 
 void
-	ofxCosmFeed::setFeedId(int _iId)
+	ofxXivelyFeed::setFeedId(int _iId)
 {
 	iFeedId = _iId;
 }
 
 void
-	ofxCosmFeed::threadedFunction()
+	ofxXivelyFeed::threadedFunction()
 {
-	if (bVerbose) printf("[COSM] Thread started\n");
+	if (bVerbose) printf("[XIVELY] Thread started\n");
 	while (true)
 	{
 		// check if new request is available
 		if (bRequestQueued)
 		{
-			if (bVerbose) printf("[COSM] new request available\n");
+			if (bVerbose) printf("[XIVELY] new request available\n");
 
 			sendRequest(request);
 
@@ -75,7 +75,7 @@ void
 }
 
 void
-	ofxCosmFeed::sendRequest(ofxCosmRequest request)
+	ofxXivelyFeed::sendRequest(ofxXivelyRequest request)
 {
 	try{
 		URI uri( request.url.c_str() );
@@ -86,7 +86,7 @@ void
 		session.setTimeout(Timespan(request.timeout, 0));
 
 		HTTPRequest req(HTTPRequest::HTTP_GET, path, HTTPMessage::HTTP_1_1);
-		if (request.method == OFX_COSM_PUT)
+		if (request.method == OFX_XIVELY_PUT)
 			req.setMethod(HTTPRequest::HTTP_PUT);
 
 		/// headers
@@ -98,30 +98,30 @@ void
 
 		req.set("Content-Length", ofToString((int)request.data.length()));
 
-		if (bVerbose) printf("[COSM] ------------------------------\n");
-		if (bVerbose) printf("[COSM] write data request\n");
+		if (bVerbose) printf("[XIVELY] ------------------------------\n");
+		if (bVerbose) printf("[XIVELY] write data request\n");
 		session.sendRequest(req) << request.data;
 
-		if (bVerbose) printf("[COSM] about to receive a response\n");
+		if (bVerbose) printf("[XIVELY] about to receive a response\n");
 		HTTPResponse res;
 		istream& rs = session.receiveResponse(res);
-		if (bVerbose) printf("[COSM] received a session response\n");
+		if (bVerbose) printf("[XIVELY] received a session response\n");
 
-		if (bVerbose) printf("[COSM] create new response object\n");
-		ofxCosmResponse response = ofxCosmResponse(res, rs, path, request.format);
+		if (bVerbose) printf("[XIVELY] create new response object\n");
+		ofxXivelyResponse response = ofxXivelyResponse(res, rs, path, request.format);
 
-		if (bVerbose) printf("[COSM] broadcast response event\n");
+		if (bVerbose) printf("[XIVELY] broadcast response event\n");
 		ofNotifyEvent(responseEvent, response, this);
 
-		if (bVerbose) printf("[COSM] ------------------------------\n\n");
+		if (bVerbose) printf("[XIVELY] ------------------------------\n\n");
 	}catch (Exception& exc){
-		printf("[COSM] Poco exception nr %d: %s\n", exc.code(), exc.displayText().c_str());
+		printf("[XIVELY] Poco exception nr %d: %s\n", exc.code(), exc.displayText().c_str());
 		bLastRequestOk = false;
 	}
 }
 
 float
-	ofxCosmFeed::getValue(int _datastream)
+	ofxXivelyFeed::getValue(int _datastream)
 {
 	if (_datastream < pData.size())
 		return pData.at(_datastream).fValue;
@@ -129,8 +129,8 @@ float
 	return 0.f;
 }
 
-ofxCosmData*
-	ofxCosmFeed::getDataStruct(int _datastream)
+ofxXivelyData*
+	ofxXivelyFeed::getDataStruct(int _datastream)
 {
 	if (_datastream >= pData.size())
 		return NULL;

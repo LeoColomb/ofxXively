@@ -1,22 +1,22 @@
-#ifndef OFX_COSM_OUTPUT_H
-#define OFX_COSM_OUTPUT_H
+#ifndef OFX_XIVELY_OUTPUT_H
+#define OFX_XIVELY_OUTPUT_H
 
 #include "ofMain.h"
 
-#include "ofxCosmFeed.h"
+#include "ofxXivelyFeed.h"
 
-class ofxCosmOutput: public ofxCosmFeed
+class ofxXivelyOutput: public ofxXivelyFeed
 {
 public:
-	ofxCosmOutput(bool _bThreaded = true);
-	~ofxCosmOutput();
+	ofxXivelyOutput(bool _bThreaded = true);
+	~ofxXivelyOutput();
 
-	bool					output(int _format = OFX_COSM_CSV, bool _force = false);
+	bool					output(int _format = OFX_XIVELY_CSV, bool _force = false);
 	bool                    parseResponseEeml(string _response);
 	bool                    parseResponseCsv(string _response);
-	void                    onResponse(ofxCosmResponse& response);
+	void                    onResponse(ofxXivelyResponse& response);
 
-	ofxCosmLocation&		getLocation() {return location;}
+	ofxXivelyLocation&		getLocation() {return location;}
 	std::string&			getTitle() {return sTitle;}
 	std::string&			getStatus() {return sStatus;}
 	std::string&			getDescription() {return sDescription;}
@@ -33,7 +33,7 @@ private:
 
 	std::string             sUpdated;
 
-	ofxCosmLocation		location;
+	ofxXivelyLocation		location;
 	/// <- INFO
 
 	float                   fLastOutput;
