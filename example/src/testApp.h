@@ -7,25 +7,25 @@
 //--------------------------------------------------------
 class testApp : public ofSimpleApp
 {
-	public:
-        testApp();
-        ~testApp();
+public:
+	testApp();
+	~testApp();
 
-		void setup();
-		void update();
-		void draw();
+	void setup();
+	void update();
+	void draw();
 
-		void keyPressed(int key);
-		void mouseMoved(int x, int y );
-		void mouseDragged(int x, int y, int button);
-		void mousePressed(int x, int y, int button);
-		void mouseReleased();
+	void keyPressed(int key);
+	void mouseMoved(int x, int y );
+	void mouseDragged(int x, int y, int button);
+	void mousePressed(int x, int y, int button);
+	void mouseReleased();
 
-	private:
-		ofxXivelyOutput*               out;
-		ofxXivelyInput*                in;
+private:
+	ofxXivelyOutput*               out;
+	ofxXivelyInput*                in;
 
-        int                             iCounter;
+	int                             iCounter;
 };
 
 #endif
