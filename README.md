@@ -14,4 +14,4 @@ Dependencies
 By
 --
 Leo Colombaro - 2013   
-Carl-Johan Ros�n - 2009
+Carl-Johan Rosen - 2009
