@@ -5,7 +5,7 @@ Made for openFrameworks 0.7.3
 
 Description
 -----------
-[Xively](xively.com) is an online interface/api to share live data across the globe. This addon implements a part of the API and allows reading (output) and serving (input) data from and to feeds. Readign can be done as CSV or EEML, serving can be done only as CSV.
+[Xively](https://xively.com) is an online interface/api to share live data across the globe. This addon implements a part of the API and allows reading (output) and serving (input) data from and to feeds. Readign can be done as CSV or EEML, serving can be done only as CSV.
 
 Dependencies
 ------------
@@ -14,4 +14,4 @@ Dependencies
 By
 --
 Leo Colombaro - 2013   
-Carl-Johan Rosén - 2009
+Carl-Johan Rosï¿½n - 2009
