@@ -1,33 +1,13 @@
 #include "ofxXivelyOutput.h"
 
-#include "Poco/DOM/DOMParser.h"
-#include "Poco/DOM/Document.h"
-#include "Poco/DOM/NodeList.h"
-#include "Poco/DOM/NodeIterator.h"
-#include "Poco/DOM/NodeFilter.h"
-#include "Poco/DOM/AutoPtr.h"
-#include "Poco/SAX/InputSource.h"
-#include "Poco/DOM/AttrMap.h"
-
-#include "Poco/Exception.h"
-
-#include <fstream>
-
-ofxXivelyOutput::ofxXivelyOutput(bool _bThreaded)
-	: ofxXivelyFeed(_bThreaded)
-{
+ofxXivelyOutput::ofxXivelyOutput(bool _bThreaded): ofxXivelyFeed(_bThreaded) {
 	ofAddListener(responseEvent, this, &ofxXivelyOutput::onResponse);
-
 	fLastOutput = ofGetElapsedTimef();
 }
 
-ofxXivelyOutput::~ofxXivelyOutput()
-{
-}
+ofxXivelyOutput::~ofxXivelyOutput() {}
 
-bool
-	ofxXivelyOutput::output(int _format, bool _force)
-{
+bool ofxXivelyOutput::output(int _format, bool _force) {
 	if (ofGetElapsedTimef() - fLastOutput < fMinInterval && !_force)
 		return false;
 
@@ -45,7 +25,7 @@ bool
 		request.method = OFX_XIVELY_GET;
 		request.format = OFX_XIVELY_CSV;
 		request.clearHeaders();
-		request.addHeader("X-XivelyApiKey", sApiKey);
+		request.addHeader("X-ApiKey", sApiKey);
 		char pcUrl[256];
 		sprintf(pcUrl, "%s%d.csv", sApiUrl.c_str(), iFeedId);
 		request.url = pcUrl;
@@ -56,7 +36,7 @@ bool
 		request.method = OFX_XIVELY_GET;
 		request.format = OFX_XIVELY_EEML;
 		request.clearHeaders();
-		request.addHeader("X-XivelyApiKey", sApiKey);
+		request.addHeader("X-ApiKey", sApiKey);
 		char pcUrl[256];
 		sprintf(pcUrl, "%s%d.xml", sApiUrl.c_str(), iFeedId);
 		request.url = pcUrl;
@@ -77,9 +57,7 @@ bool
 	return true;
 }
 
-bool
-	ofxXivelyOutput::parseResponseCsv(string _response)
-{
+bool ofxXivelyOutput::parseResponseCsv(string _response) {
 	bool bEOL = false;
 	int i = 0;
 	while (!bEOL)
@@ -95,7 +73,7 @@ bool
 		}
 
 		ofxXivelyData& data = pData.at(i);
-		std::string sValue = _response.substr(0, iPos);
+		string sValue = _response.substr(0, iPos);
 		while (sValue.at(0) == ' ')
 			sValue = sValue.substr(1);
 		data.fValue = atof(sValue.c_str());
@@ -107,78 +85,76 @@ bool
 	return true;
 }
 
-bool
-	ofxXivelyOutput::parseResponseEeml(string _response)
-{
+bool ofxXivelyOutput::parseResponseEeml(string _response) {
 	if (bVerbose) printf("[XIVELY] start parsing eeml\n");
 	try
 	{
 		pData.clear();
-		Poco::XML::DOMParser parser;
-		Poco::XML::AttrMap* pMap;
-		Poco::XML::AutoPtr<Poco::XML::Document> pDoc = parser.parseMemory(_response.c_str(), _response.length());
+		DOMParser parser;
+		AttrMap* pMap;
+		AutoPtr<Document> pDoc = parser.parseMemory(_response.c_str(), _response.length());
 
-		Poco::XML::NodeIterator itElem(pDoc, Poco::XML::NodeFilter::SHOW_ELEMENT);
+		NodeIterator itElem(pDoc, NodeFilter::SHOW_ELEMENT);
 
-		Poco::XML::Node* pNode = itElem.nextNode();
+		Node* pNode = itElem.nextNode();
 		while (pNode)
 		{
-			if (pNode->nodeName() == Poco::XML::XMLString("environment"))
+			if (pNode->nodeName() == XMLString("environment"))
 			{
-				pMap = (Poco::XML::AttrMap*)pNode->attributes();
+				pMap = (AttrMap*)pNode->attributes();
 				sUpdated = pMap->getNamedItem("updated")->nodeValue();
 			}
 
-			if (pNode->nodeName() == Poco::XML::XMLString("title"))
+			if (pNode->nodeName() == XMLString("title"))
 				sTitle = pNode->firstChild()->getNodeValue();
-			if (pNode->nodeName() == Poco::XML::XMLString("status"))
+			if (pNode->nodeName() == XMLString("status"))
 				sStatus = pNode->firstChild()->getNodeValue();
-			if (pNode->nodeName() == Poco::XML::XMLString("description"))
+			if (pNode->nodeName() == XMLString("description"))
 				sDescription = pNode->firstChild()->getNodeValue();
-			if (pNode->nodeName() == Poco::XML::XMLString("website"))
+			if (pNode->nodeName() == XMLString("website"))
 				sWebsite = pNode->firstChild()->getNodeValue();
 
-			if (pNode->nodeName() == Poco::XML::XMLString("location"))
+			if (pNode->nodeName() == XMLString("location"))
 			{
-				//				pMap = (Poco::XML::AttrMap*)pNode->attributes();
+				//				pMap = (AttrMap*)pNode->attributes();
 				//				location.sDomain = pMap->getNamedItem("domain")->nodeValue();
 				//				location.sExposure = pMap->getNamedItem("exposure")->nodeValue();
 				//				location.sDisposition = pMap->getNamedItem("disposition")->nodeValue();
 
-				Poco::XML::NodeIterator itChildren(pNode, Poco::XML::NodeFilter::SHOW_ELEMENT);
-				Poco::XML::Node* pChild = itChildren.nextNode();
+				NodeIterator itChildren(pNode, NodeFilter::SHOW_ELEMENT);
+				Node* pChild = itChildren.nextNode();
 				while (pChild)
 				{
-					if (pChild->nodeName() == Poco::XML::XMLString("name"))
+					if (pChild->nodeName() == XMLString("name"))
 						location.sName = pChild->firstChild()->nodeValue();
-					if (pChild->nodeName() == Poco::XML::XMLString("lat"))
+					if (pChild->nodeName() == XMLString("lat"))
 						location.sLat = pChild->firstChild()->nodeValue();
-					if (pChild->nodeName() == Poco::XML::XMLString("lon"))
+					if (pChild->nodeName() == XMLString("lon"))
 						location.sLon = pChild->firstChild()->nodeValue();
 
 					pChild = itChildren.nextNode();
 				}
 			}
 
-			if (pNode->nodeName() == Poco::XML::XMLString("data"))
+			if (pNode->nodeName() == XMLString("data"))
 			{
 				ofxXivelyData data;
 
-				pMap = (Poco::XML::AttrMap*)pNode->attributes();
+				pMap = (AttrMap*)pNode->attributes();
 				data.iId = atoi(pMap->getNamedItem("id")->nodeValue().c_str());
 
-				Poco::XML::NodeIterator itChildren(pNode, Poco::XML::NodeFilter::SHOW_ELEMENT);
-				Poco::XML::Node* pChild = itChildren.nextNode();
+				NodeIterator itChildren(pNode, NodeFilter::SHOW_ELEMENT);
+				Node* pChild = itChildren.nextNode();
 				while (pChild)
 				{
-					if (pChild->nodeName() == Poco::XML::XMLString("tag"))
+					if (pChild->nodeName() == XMLString("tag"))
 						data.pTags.push_back(pChild->firstChild()->getNodeValue());
 
-					if (pChild->nodeName() == Poco::XML::XMLString("value"))
+					if (pChild->nodeName() == XMLString("value"))
 					{
 						data.fValue = atof(pChild->firstChild()->getNodeValue().c_str());
 
-						pMap = (Poco::XML::AttrMap*)pChild->attributes();
+						pMap = (AttrMap*)pChild->attributes();
 						data.fValueMin = atof(pMap->getNamedItem("minValue")->nodeValue().c_str());
 						data.fValueMax = atof(pMap->getNamedItem("maxValue")->nodeValue().c_str());
 					}
@@ -192,7 +168,7 @@ bool
 			pNode = itElem.nextNode();
 		}
 	}
-	catch (Poco::Exception& exc)
+	catch (Exception& exc)
 	{
 		printf("[XIVELY] Parse xml exception: %s\n", exc.displayText().c_str());
 		return false;
@@ -202,9 +178,7 @@ bool
 	return true;
 }
 
-void
-	ofxXivelyOutput::onResponse(ofxXivelyResponse &response)
-{
+void ofxXivelyOutput::onResponse(ofxXivelyResponse &response) {
 	if (bVerbose)
 	{
 		printf("[XIVELY] received response with status %d\n", response.status);

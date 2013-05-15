@@ -1,22 +1,13 @@
 #include "ofxXivelyInput.h"
 
-#include "Poco/Exception.h"
-
-#include <fstream>
-
-ofxXivelyInput::ofxXivelyInput(bool _bThreaded)
-	: ofxXivelyFeed(_bThreaded)
-{
+ofxXivelyInput::ofxXivelyInput(bool _bThreaded): ofxXivelyFeed(_bThreaded) {
 	ofAddListener(responseEvent, this, &ofxXivelyInput::onResponse);
 	fLastInput = ofGetElapsedTimef();
 }
 
-ofxXivelyInput::~ofxXivelyInput()
-{
-}
+ofxXivelyInput::~ofxXivelyInput() {}
 
-std::string
-	ofxXivelyInput::makeCsv()
+string ofxXivelyInput::makeCsv()
 {
 	char pcCsv[1024];
 	pcCsv[0] = '\0';
@@ -29,15 +20,13 @@ std::string
 		else
 			bPrependComma = true;
 
-		sprintf(pcCsv, "%s%f\0", pcCsv, (*itData).fValue);
+		printf("%s%f\0", pcCsv, (*itData).fValue);
 	}
 
-	return std::string(pcCsv);
+	return string(pcCsv);
 }
 
-bool
-	ofxXivelyInput::input(int _format, bool _force)
-{
+bool ofxXivelyInput::input(int _format, bool _force) {
 	if (ofGetElapsedTimef() - fLastInput < fMinInterval && !_force)
 		return false;
 
@@ -55,7 +44,7 @@ bool
 		request.method = OFX_XIVELY_PUT;
 		request.format = OFX_XIVELY_CSV;
 		request.clearHeaders();
-		request.addHeader("X-XivelyApiKey", sApiKey);
+		request.addHeader("X-ApiKey", sApiKey);
 		char pcUrl[256];
 		sprintf(pcUrl, "%s%d.csv", sApiUrl.c_str(), iFeedId);
 		request.url = pcUrl;
@@ -77,9 +66,7 @@ bool
 	return true;
 }
 
-void
-	ofxXivelyInput::onResponse(ofxXivelyResponse &response)
-{
+void ofxXivelyInput::onResponse(ofxXivelyResponse &response) {
 	if (bVerbose)
 	{
 		printf("[XIVELY] received response with status %d\n", response.status);
@@ -102,9 +89,7 @@ void
 	}
 }
 
-void
-	ofxXivelyInput::setDatastreamCount(int _datastreams)
-{
+void ofxXivelyInput::setDatastreamCount(int _datastreams) {
 	while (pData.size() > _datastreams)
 		pData.pop_back();
 
@@ -120,9 +105,7 @@ void
 	}
 }
 
-bool
-	ofxXivelyInput::setValue(int _datastream, float _value)
-{
+bool ofxXivelyInput::setValue(int _datastream, float _value) {
 	if (_datastream >= pData.size())
 		return false;
 
