@@ -47,14 +47,14 @@ void ofxXivelyFeed::setFeedId(int _iId) {
 }
 
 void ofxXivelyFeed::threadedFunction() {
-	if (bVerbose) printf("[XIVELY] Thread started\n");
+	if (bVerbose) printf("[Xively] Thread started\n");
 	while (true)
 	{
 		// check if new request is available
 		if (bRequestQueued)
 		{
 			if (bVerbose) 
-				printf("[XIVELY] new request available\n");
+				printf("[Xively] new request available\n");
 
 			sendRequest(request);
 			bRequestQueued = false;
@@ -89,25 +89,25 @@ void ofxXivelyFeed::sendRequest(ofxXivelyRequest request) {
 
 		req.set("Content-Length", ofToString((int)request.data.length()));
 
-		if (bVerbose) printf("[XIVELY] ------------------------------\n");
-		if (bVerbose) printf("[XIVELY] write data request\n");
+		if (bVerbose) printf("[Xively] ------------------------------\n");
+		if (bVerbose) printf("[Xively] write data request\n");
 		httpsSession->sendRequest(req) << request.data;
 
-		if (bVerbose) printf("[XIVELY] about to receive a response\n");
+		if (bVerbose) printf("[Xively] about to receive a response\n");
 		HTTPResponse res;
 		rs = &httpsSession->receiveResponse(res);
 		session = ofPtr<HTTPSession>(httpsSession); 
-		if (bVerbose) printf("[XIVELY] received a session response\n");
+		if (bVerbose) printf("[Xively] received a session response\n");
 
-		if (bVerbose) printf("[XIVELY] create new response object\n");
+		if (bVerbose) printf("[Xively] create new response object\n");
 		ofxXivelyResponse response = ofxXivelyResponse(res, * rs, path, request.format);
 
-		if (bVerbose) printf("[XIVELY] broadcast response event\n");
+		if (bVerbose) printf("[Xively] broadcast response event\n");
 		ofNotifyEvent(responseEvent, response, this);
 
-		if (bVerbose) printf("[XIVELY] ------------------------------\n\n");
+		if (bVerbose) printf("[Xively] ------------------------------\n\n");
 	} catch (Exception& exc) {
-		printf("[XIVELY] Poco exception nr %d: %s\n", exc.code(), exc.displayText().c_str());
+		printf("[Xively] Poco exception nr %d: %s\n", exc.code(), exc.displayText().c_str());
 		bLastRequestOk = false;
 	}
 }

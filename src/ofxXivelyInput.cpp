@@ -69,9 +69,9 @@ bool ofxXivelyInput::input(int _format, bool _force) {
 void ofxXivelyInput::onResponse(ofxXivelyResponse &response) {
 	if (bVerbose)
 	{
-		printf("[XIVELY] received response with status %d\n", response.status);
-		printf("[XIVELY] %s\n", response.reasonForStatus.c_str());
-		printf("[XIVELY] %s\n", response.responseBody.c_str());
+		printf("[Xively] received response with status %d\n", response.status);
+		printf("[Xively] %s\n", response.reasonForStatus.c_str());
+		printf("[Xively] %s\n", response.responseBody.c_str());
 	}
 
 	if (response.status == 200)
@@ -79,13 +79,13 @@ void ofxXivelyInput::onResponse(ofxXivelyResponse &response) {
 		/// input OK
 		bLastRequestOk = true;
 		fLastResponseTime = ofGetElapsedTimef();
-		if (bVerbose) printf("[XIVELY] Input succeded\n");
+		if (bVerbose) printf("[Xively] Input succeded\n");
 	}
 	else
 	{
 		bLastRequestOk = false;
-		printf("[XIVELY] Error: response failed with status %d\n", response.status);
-		printf("[XIVELY] %s\n", response.responseBody.c_str());
+		printf("[Xively] Error: response failed with status %d\n", response.status);
+		printf("[Xively] %s\n", response.responseBody.c_str());
 	}
 }
 

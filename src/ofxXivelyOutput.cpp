@@ -86,7 +86,7 @@ bool ofxXivelyOutput::parseResponseCsv(string _response) {
 }
 
 bool ofxXivelyOutput::parseResponseEeml(string _response) {
-	if (bVerbose) printf("[XIVELY] start parsing eeml\n");
+	if (bVerbose) printf("[Xively] start parsing eeml\n");
 	try
 	{
 		pData.clear();
@@ -170,10 +170,10 @@ bool ofxXivelyOutput::parseResponseEeml(string _response) {
 	}
 	catch (Exception& exc)
 	{
-		printf("[XIVELY] Parse xml exception: %s\n", exc.displayText().c_str());
+		printf("[Xively] Parse xml exception: %s\n", exc.displayText().c_str());
 		return false;
 	}
-	if (bVerbose) printf("[XIVELY] finished parsing eeml\n");
+	if (bVerbose) printf("[Xively] finished parsing eeml\n");
 
 	return true;
 }
@@ -181,9 +181,9 @@ bool ofxXivelyOutput::parseResponseEeml(string _response) {
 void ofxXivelyOutput::onResponse(ofxXivelyResponse &response) {
 	if (bVerbose)
 	{
-		printf("[XIVELY] received response with status %d\n", response.status);
-		printf("[XIVELY] %s\n", response.reasonForStatus.c_str());
-		printf("[XIVELY] %s\n", response.responseBody.c_str());
+		printf("[Xively] received response with status %d\n", response.status);
+		printf("[Xively] %s\n", response.reasonForStatus.c_str());
+		printf("[Xively] %s\n", response.responseBody.c_str());
 	}
 
 	if (response.status == 200)
@@ -207,7 +207,7 @@ void ofxXivelyOutput::onResponse(ofxXivelyResponse &response) {
 	else
 	{
 		bLastRequestOk = false;
-		printf("[XIVELY] Error: response failed with status %d\n", response.status);
-		printf("[XIVELY] %s\n", response.responseBody.c_str());
+		printf("[Xively] Error: response failed with status %d\n", response.status);
+		printf("[Xively] %s\n", response.responseBody.c_str());
 	}
 }
