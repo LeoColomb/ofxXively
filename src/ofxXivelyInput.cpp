@@ -1,6 +1,6 @@
-#include "ofxXivelyInput.h"
+﻿#include "ofxXivelyInput.h"
 
-ofxXivelyInput::ofxXivelyInput(bool _bThreaded): ofxXivelyFeed(_bThreaded) {
+ofxXivelyInput::ofxXivelyInput(bool _bThreaded) : ofxXivelyFeed(_bThreaded) {
 	ofAddListener(responseEvent, this, &ofxXivelyInput::onResponse);
 	fLastInput = ofGetElapsedTimef();
 }

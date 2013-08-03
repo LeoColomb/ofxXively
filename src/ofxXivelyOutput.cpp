@@ -1,6 +1,6 @@
-#include "ofxXivelyOutput.h"
+﻿#include "ofxXivelyOutput.h"
 
-ofxXivelyOutput::ofxXivelyOutput(bool _bThreaded): ofxXivelyFeed(_bThreaded) {
+ofxXivelyOutput::ofxXivelyOutput(bool _bThreaded) : ofxXivelyFeed(_bThreaded) {
 	ofAddListener(responseEvent, this, &ofxXivelyOutput::onResponse);
 	fLastOutput = ofGetElapsedTimef();
 }
@@ -77,7 +77,7 @@ bool ofxXivelyOutput::parseResponseCsv(string _response) {
 		while (sValue.at(0) == ' ')
 			sValue = sValue.substr(1);
 		data.fValue = atof(sValue.c_str());
-		_response = _response.substr(iPos+1);
+		_response = _response.substr(iPos + 1);
 
 		++i;
 	}
@@ -101,7 +101,7 @@ bool ofxXivelyOutput::parseResponseEeml(string _response) {
 		{
 			if (pNode->nodeName() == XMLString("environment"))
 			{
-				pMap = (AttrMap*)pNode->attributes();
+				pMap = (AttrMap*) pNode->attributes();
 				sUpdated = pMap->getNamedItem("updated")->nodeValue();
 			}
 
@@ -140,7 +140,7 @@ bool ofxXivelyOutput::parseResponseEeml(string _response) {
 			{
 				ofxXivelyData data;
 
-				pMap = (AttrMap*)pNode->attributes();
+				pMap = (AttrMap*) pNode->attributes();
 				data.iId = atoi(pMap->getNamedItem("id")->nodeValue().c_str());
 
 				NodeIterator itChildren(pNode, NodeFilter::SHOW_ELEMENT);
@@ -154,7 +154,7 @@ bool ofxXivelyOutput::parseResponseEeml(string _response) {
 					{
 						data.fValue = atof(pChild->firstChild()->getNodeValue().c_str());
 
-						pMap = (AttrMap*)pChild->attributes();
+						pMap = (AttrMap*) pChild->attributes();
 						data.fValueMin = atof(pMap->getNamedItem("minValue")->nodeValue().c_str());
 						data.fValueMax = atof(pMap->getNamedItem("maxValue")->nodeValue().c_str());
 					}

@@ -1,4 +1,4 @@
-/****************************
+﻿/****************************
 * This is an openFrameworks addon for talking to Xively
 * www.openframeworks.cc
 * xively.com
@@ -84,8 +84,8 @@ struct ofxXivelyRequest {
 
 	// ----------------------------------------------------------------------
 	void addHeader(string id, string value){
-		headerIds.push_back( id );
-		headerValues.push_back( value );
+		headerIds.push_back(id);
+		headerValues.push_back(value);
 	}
 	// ----------------------------------------------------------------------
 	void clearHeaders(){
@@ -116,7 +116,7 @@ struct ofxXivelyResponse {
 	int             format;                 /// CSV/EEML
 };
 
-class ofxXivelyFeed: public ofThread {
+class ofxXivelyFeed : public ofThread {
 public:
 	ofxXivelyFeed(bool _bThreaded);
 	virtual ~ofxXivelyFeed();
@@ -124,13 +124,13 @@ public:
 	void					setMinInterval(float fSeconds);
 	void					setApiKey(string _sApiKey);
 	void					setFeedId(int _iId);
-	int						getFeedId() {return iFeedId;}
-	void					setVerbose(bool _bVerbose) {bVerbose = _bVerbose;}
+	int						getFeedId() { return iFeedId; }
+	void					setVerbose(bool _bVerbose) { bVerbose = _bVerbose; }
 
-	bool                    getLastRequestOk() {return bLastRequestOk;}
-	float                   getLastResponseTime() {return fLastResponseTime;}
+	bool                    getLastRequestOk() { return bLastRequestOk; }
+	float                   getLastResponseTime() { return fLastResponseTime; }
 
-	int						getDatastreamCount() {return pData.size();}
+	int						getDatastreamCount() { return pData.size(); }
 	float					getValue(int _datastream);
 	ofxXivelyData*			getDataStruct(int _datastream);
 

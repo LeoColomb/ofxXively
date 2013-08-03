@@ -1,4 +1,4 @@
-#ifndef OFX_XIVELY_INPUT_H
+﻿#ifndef OFX_XIVELY_INPUT_H
 #define OFX_XIVELY_INPUT_H
 
 #include "ofMain.h"
@@ -7,7 +7,7 @@
 
 #include <fstream>
 
-class ofxXivelyInput: public ofxXivelyFeed {
+class ofxXivelyInput : public ofxXivelyFeed {
 public:
 	ofxXivelyInput(bool _bThreaded = true);
 	~ofxXivelyInput();

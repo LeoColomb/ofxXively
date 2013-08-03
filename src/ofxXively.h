@@ -1,4 +1,4 @@
-#ifndef OFX_XIVELY_H
+﻿#ifndef OFX_XIVELY_H
 #define OFX_XIVELY_H
 
 #include "ofxXivelyInput.h"

@@ -1,5 +1,4 @@
-#include "ofxXivelyFeed.h"
-
+﻿#include "ofxXivelyFeed.h"
 
 ofxXivelyFeed::ofxXivelyFeed(bool _bThreaded) {
 	bThreaded = _bThreaded;
@@ -20,7 +19,8 @@ ofxXivelyFeed::ofxXivelyFeed(bool _bThreaded) {
 		SharedPtr<InvalidCertificateHandler> pInvalidCertHandler = new ConsoleCertificateHandler(true);
 		Context::Ptr pContext = new Context(Context::CLIENT_USE, "", Context::VERIFY_NONE);
 		SSLManager::instance().initializeClient(pConsoleHandler, pInvalidCertHandler, pContext);
-	} catch (SystemException & PS) {
+	}
+	catch (SystemException & PS) {
 		ofLog(OF_LOG_ERROR, "Got exception in Xively");
 	}
 
@@ -53,7 +53,7 @@ void ofxXivelyFeed::threadedFunction() {
 		// check if new request is available
 		if (bRequestQueued)
 		{
-			if (bVerbose) 
+			if (bVerbose)
 				printf("[Xively] new request available\n");
 
 			sendRequest(request);
@@ -67,7 +67,7 @@ void ofxXivelyFeed::threadedFunction() {
 
 void ofxXivelyFeed::sendRequest(ofxXivelyRequest request) {
 	try{
-		URI uri( request.url.c_str() );
+		URI uri(request.url.c_str());
 		string path(uri.getPathAndQuery());
 		if (path.empty()) path = "/";
 
@@ -81,13 +81,13 @@ void ofxXivelyFeed::sendRequest(ofxXivelyRequest request) {
 			req.setMethod(HTTPRequest::HTTP_PUT);
 
 		/// headers
-		for(unsigned int i=0; i<request.headerIds.size(); i++){
+		for (unsigned int i = 0; i < request.headerIds.size(); i++){
 			const string name = request.headerIds[i].c_str();
 			const string val = request.headerValues[i].c_str();
 			req.set(name, val);
 		}
 
-		req.set("Content-Length", ofToString((int)request.data.length()));
+		req.set("Content-Length", ofToString((int) request.data.length()));
 
 		if (bVerbose) printf("[Xively] ------------------------------\n");
 		if (bVerbose) printf("[Xively] write data request\n");
@@ -96,17 +96,18 @@ void ofxXivelyFeed::sendRequest(ofxXivelyRequest request) {
 		if (bVerbose) printf("[Xively] about to receive a response\n");
 		HTTPResponse res;
 		rs = &httpsSession->receiveResponse(res);
-		session = ofPtr<HTTPSession>(httpsSession); 
+		session = ofPtr<HTTPSession>(httpsSession);
 		if (bVerbose) printf("[Xively] received a session response\n");
 
 		if (bVerbose) printf("[Xively] create new response object\n");
-		ofxXivelyResponse response = ofxXivelyResponse(res, * rs, path, request.format);
+		ofxXivelyResponse response = ofxXivelyResponse(res, *rs, path, request.format);
 
 		if (bVerbose) printf("[Xively] broadcast response event\n");
 		ofNotifyEvent(responseEvent, response, this);
 
 		if (bVerbose) printf("[Xively] ------------------------------\n\n");
-	} catch (Exception& exc) {
+	}
+	catch (Exception& exc) {
 		printf("[Xively] Poco exception nr %d: %s\n", exc.code(), exc.displayText().c_str());
 		bLastRequestOk = false;
 	}

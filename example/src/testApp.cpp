@@ -1,4 +1,4 @@
-#include "testApp.h"
+﻿#include "testApp.h"
 
 testApp::testApp()
 {
@@ -41,7 +41,7 @@ void testApp::update(){
 	/// value is set each 'update' but input to xively is done only after min interval has passed
 	/// You can control this maually by some timing functionality, or adjusting in->setMinInterval()
 	/// Input can only be done as CSV
-	in->setValue(0, ofRandom(0,100));
+	in->setValue(0, ofRandom(0, 100));
 	in->input();
 
 	/// A counter to see if threads are working
@@ -51,12 +51,12 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	ofBackground(10, 50, 0);
-	ofSetColor(255,255,255);
+	ofSetColor(255, 255, 255);
 	ofFill();
 
 	char pcText[256];
 	sprintf(pcText, "Counter: %d\n", iCounter);
-	ofDrawBitmapString(pcText, 20, ofGetHeight()-5);
+	ofDrawBitmapString(pcText, 20, ofGetHeight() - 5);
 
 	/// OUTPUT
 	if (out->getLastRequestOk())
@@ -75,7 +75,7 @@ void testApp::draw(){
 	ofDrawBitmapString(pcText, 20, 80);
 	sprintf(pcText, "Status: %s\n", out->getStatus().c_str());
 	ofDrawBitmapString(pcText, 20, 95);
-	sprintf(pcText, "Description: %s\n", out->getDescription().substr(0,256).c_str());
+	sprintf(pcText, "Description: %s\n", out->getDescription().substr(0, 256).c_str());
 	ofDrawBitmapString(pcText, 20, 110);
 
 	sprintf(pcText, "Last response time: %.0f\n", out->getLastResponseTime());
@@ -85,7 +85,7 @@ void testApp::draw(){
 	for (int i = 0; i < out->getDatastreamCount(); ++i)
 	{
 		sprintf(pcText, "Value %d: %f\n", i, out->getValue(i));
-		ofDrawBitmapString(pcText, 20, 185+15*i);
+		ofDrawBitmapString(pcText, 20, 185 + 15 * i);
 	}
 
 	/// INPUT
@@ -100,19 +100,19 @@ void testApp::draw(){
 	for (int i = 0; i < in->getDatastreamCount(); ++i)
 	{
 		sprintf(pcText, "Value %d: %f\n", i, in->getValue(i));
-		ofDrawBitmapString(pcText, 20, 330+15*i);
+		ofDrawBitmapString(pcText, 20, 330 + 15 * i);
 	}
 }
 
 //--------------------------------------------------------------
-void testApp::keyPressed  (int key){
+void testApp::keyPressed(int key){
 	/// Press 'e' to refresh feed info compleately as EEML
 	if (key == 'e')
 		out->output(OFX_XIVELY_EEML, true);
 }
 
 //--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y ){
+void testApp::mouseMoved(int x, int y){
 }
 
 //--------------------------------------------------------------

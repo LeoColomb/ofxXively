@@ -1,4 +1,4 @@
-#ifndef OFX_XIVELY_OUTPUT_H
+﻿#ifndef OFX_XIVELY_OUTPUT_H
 #define OFX_XIVELY_OUTPUT_H
 
 #include "ofMain.h"
@@ -21,7 +21,7 @@ using namespace std;
 using namespace Poco::XML;
 using namespace Poco;
 
-class ofxXivelyOutput: public ofxXivelyFeed
+class ofxXivelyOutput : public ofxXivelyFeed
 {
 public:
 	ofxXivelyOutput(bool _bThreaded = true);
@@ -32,12 +32,12 @@ public:
 	bool parseResponseCsv(string _response);
 	void onResponse(ofxXivelyResponse& response);
 
-	ofxXivelyLocation&	getLocation() {return location;}
-	string& getTitle() {return sTitle;}
-	string&	getStatus() {return sStatus;}
-	string&	getDescription() {return sDescription;}
-	string&	getWebsite() {return sWebsite;}
-	string& getUpdated() {return sUpdated;}
+	ofxXivelyLocation&	getLocation() { return location; }
+	string& getTitle() { return sTitle; }
+	string&	getStatus() { return sStatus; }
+	string&	getDescription() { return sDescription; }
+	string&	getWebsite() { return sWebsite; }
+	string& getUpdated() { return sUpdated; }
 
 private:
 
