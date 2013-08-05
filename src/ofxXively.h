@@ -1,7 +1,13 @@
-﻿#ifndef OFX_XIVELY_H
-#define OFX_XIVELY_H
+#ifndef __OFX_XIVELY_H__
+#define __OFX_XIVELY_H__
 
-#include "ofxXivelyInput.h"
-#include "ofxXivelyOutput.h"
+#include "xively.h"
+
+class ofxXively {
+
+public:
+	ofxXively();
+	~ofxXively();
+};
 
 #endif
