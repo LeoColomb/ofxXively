@@ -1,4 +1,6 @@
-﻿meta:
+﻿# Addon config for ofxXively
+
+meta:
 	ADDON_NAME = ofxXively
 	ADDON_DESCRIPTION = openFrameworks addon for talking to Xively
 	ADDON_AUTHOR = Leo Colombaro

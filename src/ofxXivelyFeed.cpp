@@ -20,8 +20,8 @@ ofxXivelyFeed::ofxXivelyFeed(bool _bThreaded) {
 		Context::Ptr pContext = new Context(Context::CLIENT_USE, "", Context::VERIFY_NONE);
 		SSLManager::instance().initializeClient(pConsoleHandler, pInvalidCertHandler, pContext);
 	}
-	catch (SystemException & PS) {
-		ofLog(OF_LOG_ERROR, "Got exception in Xively");
+	catch (Poco::SystemException & PS) {
+		ofLogError("ofxXively") << "couldn't create factory: " << PS.displayText();
 	}
 
 	if (bThreaded)
@@ -47,14 +47,14 @@ void ofxXivelyFeed::setFeedId(int _iId) {
 }
 
 void ofxXivelyFeed::threadedFunction() {
-	if (bVerbose) printf("[Xively] Thread started\n");
+	ofLogVerbose("Xively") << "Thread started";
+
 	while (true)
 	{
 		// check if new request is available
 		if (bRequestQueued)
 		{
-			if (bVerbose)
-				printf("[Xively] new request available\n");
+			ofLogVerbose("Xively") << "New request available";
 
 			sendRequest(request);
 			bRequestQueued = false;
@@ -89,26 +89,26 @@ void ofxXivelyFeed::sendRequest(ofxXivelyRequest request) {
 
 		req.set("Content-Length", ofToString((int) request.data.length()));
 
-		if (bVerbose) printf("[Xively] ------------------------------\n");
-		if (bVerbose) printf("[Xively] write data request\n");
+		ofLogVerbose("Xively") << "-----------------------------";
+		ofLogVerbose("Xively") << "write data request";
 		httpsSession->sendRequest(req) << request.data;
 
-		if (bVerbose) printf("[Xively] about to receive a response\n");
+		ofLogVerbose("Xively") << "about to receive a response";
 		HTTPResponse res;
 		rs = &httpsSession->receiveResponse(res);
 		session = ofPtr<HTTPSession>(httpsSession);
-		if (bVerbose) printf("[Xively] received a session response\n");
+		ofLogVerbose("Xively") << "received a session response";
 
-		if (bVerbose) printf("[Xively] create new response object\n");
+		ofLogVerbose("Xively") << "create new response object";
 		ofxXivelyResponse response = ofxXivelyResponse(res, *rs, path, request.format);
 
-		if (bVerbose) printf("[Xively] broadcast response event\n");
+		ofLogVerbose("Xively") << "broadcast response event";
 		ofNotifyEvent(responseEvent, response, this);
 
-		if (bVerbose) printf("[Xively] ------------------------------\n\n");
+		ofLogVerbose("Xively") << "------------------------------";
 	}
 	catch (Exception& exc) {
-		printf("[Xively] Poco exception nr %d: %s\n", exc.code(), exc.displayText().c_str());
+		ofLogError("ofxXively") << "Poco exception nr " << exc.code() << ": " << exc.displayText();
 		bLastRequestOk = false;
 	}
 }
